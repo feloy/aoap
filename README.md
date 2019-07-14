@@ -145,7 +145,7 @@ The different controllers handling pods are:
 
 In Kubernetes, all controllers respect the principle of the **Reconcile Loop**: the controller perpetually **watches** for some objects of interest, to be able to detect if the actual state of the *world* (the objects running in the cluster) satisfies the specs of the different objects the controller is responsible for and to adapt the *world* consequently.
 
-## ReplicaSet specs
+## ReplicaSet controller
 
 Parameters for a ReplicaSet are:
 - `Replicas` indicates how many replicas of selected Pods you want.
@@ -153,7 +153,36 @@ Parameters for a ReplicaSet are:
 - `Template` is the template used to create new Pods when insufficient replicas are detected by the Controller.
 - `MinReadySeconds` indicates the number of seconds the controller should wait after a Pod starts without failing to consider the Pod is ready.
 
-
 The ReplicaSet controller perpetually **watches** the Pods with the labels specified with `Selector`. At any given time, if the number of actual running Pods with these labels:
 - is greater than the requested `Replicas`, some Pods will be terminated to satisfy the number of replicas. Note that the terminated Pods are not necessarily Pods that were created by the ReplicaSet controller.
 - is lower than the requested `Replicas`, new Pods will be created with the specified Pod `Template` to satisfy the number of replicas. Note that to avoid the ReplicaSet controller to create Pods in a loop, the specified `Template` must create a Pod selectable by the specified `Selector`.
+
+Note that:
+- the `Selector` parameter of a ReplicaSet is immutable,
+- changing the `Template` of a ReplicaSet will not have an immediate effect. It will affect the Pods that will be created after this change,
+- changing the `Replicas` parameter will immediately trigger the creation or termination of Pods.
+
+## Deployment controller
+
+Parameters for a `Deployment` are:
+- `Replicas` indicates the number of replicas requested.
+- `Selector` defines the Pods you want the Deployment controller to manage.
+- `Template` is the template requested for the Pods.
+- `MinReadySeconds` indicates the number of seconds the controller should wait after a Pod starts without failing to consider the Pod is ready.
+- `Strategy`
+- `RevisionHistoryLimit`
+- `Paused`
+- `ProgressDeadlineSeconds`
+
+The Deployment controller perpetually **watches** the ReplicaSets with the requested `Selector`. Among these:
+- if a ReplicaSet with the requested `Template` exists, the controller will ensure that the number of `Replicas` for this ReplicaSet equals the number of requested `Replicas` (by using the requested `Strategy`) and `MinReadySeconds` equals the requested one.
+- if no ReplicaSet exists with the requested `Template`, the controller will create a new ReplicaSet with the requested `Replicas`, `Selector`, `Template` and `MinReadySeconds`.
+- for ReplicaSets with a non matching `Template`, the controller will ensure that the number of `Replicas` is set to zero (by using the requested `Strategy`).
+
+Note that:
+- the `Selector` parameter of a Deployment is immutable,
+- changing the `Template` parameter of a Deployment will immediately:
+  - either trigger the creation of a new ReplicaSet if no one exists with the requested `Selector` and `Template`
+  - or update an existing one matching the requested `Selector` and `Template` with the requested `Replicas` (using `Strategy`),
+  - set to zero the number of `Replicas` of other ReplicaSets,
+- changing the `Replicas` or `MinReadySeconds` parameter of a Deployment will immediately update the corresponding value of the corresponding ReplicaSet (the one with the requested `Template`).
