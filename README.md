@@ -82,7 +82,7 @@ The Pod created is ready for production ... it you are not very fussy. Otherwise
 
 ## Pod specs
 
-Here is a classification of the Pod parameters in big categories.
+Here is a classification of the Pod parameters.
 
 - **Containers** parameters will define and parameterize more precisely each container of the Pod, whether it is a normal container (`Containers`) or an init container (`InitContainers`). The `ImagePullSecrets` parameter will help to download containers images from private registries.
 
@@ -93,7 +93,7 @@ using `Affinity` and `Tolerations`, by selecting a specific scheduler (`Sceduler
 
 - **Lifecycle** parameters will help define if a Pod should restart after execution ends (`RestartPolicy`) and fine-tune the periods after which processes running in the containers of a terminating pod are killed (`TerminationGracePeriodSeconds`) or after which a running Pod will be stopped if not yet terminated (`ActiveDeadlineSeconds`). They also help define readiness of a pod (`ReadinessGates`).
 
-- **Hostname and Name resolution** parameters will help define the hostname (`Hostname`) and FQDN (`Subdomain`) of the Pod, add hosts in the `/etc/hosts` files of the containers (`HostAliases`), fine-tune the `/etc/resolv.conf` files of the containers (`DNSConfig`) and define a policy for the DNS configuration (`DNSPolicy`).
+- **Hostname and Name resolution** parameters will help define the hostname (`Hostname`) and FQDN (`Subdomain`) of the Pod, add hosts in the */etc/hosts* files of the containers (`HostAliases`), fine-tune the */etc/resolv.conf* files of the containers (`DNSConfig`) and define a policy for the DNS configuration (`DNSPolicy`).
 
 - **Host namespaces** parameters will help indicate if the Pod must use host namespaces for network (`HostNetwork`), PIDs (`HostPID`), IPC (`HostIPC`) and if containers will share the same (non-host) process namespace (`ShareProcessNamespace`).
 
@@ -129,3 +129,16 @@ The parameters related to Kubernetes are:
 - **Security Context** parameter help define various security attributes and common container settings at the container level.
 
 - **Debugging** parameters are very specialized parameters, mostly for debugging purposes (`Stdin`, `StdinOnce` and `TTY`).
+
+## Pod Controllers
+
+The pod, although being the master piece of the Kubernetes architecture, is rarely used alone. We generally use a Controller to run a pod with some specific policies.
+
+The different controllers handling pods are:
+
+- `ReplicaSet`: ensures that a specified number of pod replicas are running at any given time.
+- `Deployment`: enables declarative updates for Pods and ReplicaSets.
+- `StatefulSet`: manages updates of Pods and ReplicaSets taking care of stateful resources.
+- `DaemonSet`: ensures that all or some nodes are running a copy of a Pod.
+- `Job`: starts pods and ensures they complete.
+- `CronJob`: creates a Job on a time-based schedule.
