@@ -132,7 +132,7 @@ The parameters related to Kubernetes are:
 
 ## Pod Controllers
 
-The pod, although being the master piece of the Kubernetes architecture, is rarely used alone. We generally use a Controller to run a pod with some specific policies.
+The pod, although being the master piece of the Kubernetes architecture, is rarely used alone. You will generally use a Controller to run a pod with some specific policies.
 
 The different controllers handling pods are:
 
@@ -142,3 +142,18 @@ The different controllers handling pods are:
 - `DaemonSet`: ensures that all or some nodes are running a copy of a Pod.
 - `Job`: starts pods and ensures they complete.
 - `CronJob`: creates a Job on a time-based schedule.
+
+In Kubernetes, all controllers respect the principle of the **Reconcile Loop**: the controller perpetually **watches** for some objects of interest, to be able to detect if the actual state of the *world* (the objects running in the cluster) satisfies the specs of the different objects the controller is responsible for and to adapt the *world* consequently.
+
+## ReplicaSet specs
+
+Parameters for a ReplicaSet are:
+- `Replicas` indicates how many replicas of selected Pods you want.
+- `Selector` defines the Pods you want the ReplicaSet controller to manage.
+- `Template` is the template used to create new Pods when insufficient replicas are detected by the Controller.
+- `MinReadySeconds` indicates the number of seconds the controller should wait after a Pod starts without failing to consider the Pod is ready.
+
+
+The ReplicaSet controller perpetually **watches** the Pods with the labels specified with `Selector`. At any given time, if the number of actual running Pods with these labels:
+- is greater than the requested `Replicas`, some Pods will be terminated to satisfy the number of replicas. Note that the terminated Pods are not necessarily Pods that were created by the ReplicaSet controller.
+- is lower than the requested `Replicas`, new Pods will be created with the specified Pod `Template` to satisfy the number of replicas. Note that to avoid the ReplicaSet controller to create Pods in a loop, the specified `Template` must create a Pod selectable by the specified `Selector`.
