@@ -78,7 +78,7 @@ In this introduction, we have seen three ways to create a Pod:
 - with `kubectl apply`
 - with the `client-go` library.
 
-The Pod created is ready for production ... it you are not very fussy. Otherwise, the Pod offers a long list of parameters to make it more production-ready. We will examine in this document all these parameters.
+The Pod created is ready for production ... if you are not very fussy. Otherwise, the Pod offers a long list of parameters to make it more production-ready. We will examine in this document all these parameters.
 
 ## Pod specs
 
