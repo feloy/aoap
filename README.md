@@ -111,7 +111,7 @@ The parameters related to container runtime are:
 
 - **Image** parameters define the image of the container (`Image`) and the policy to pull the image (`ImagePullPolicy`).
 
-- **Entrypoint** parameters define the command (`Command`) and its arguments (`Args`) of the entrypoint and its working directory (`WorkingDir`).
+- **Entrypoint** parameters define the command (`Command`) and arguments (`Args`) of the entrypoint and its working directory (`WorkingDir`).
 
 - **Ports** parameter (`Ports`) defines the list of ports to expose from the container.
 
