@@ -148,7 +148,7 @@ In this introduction, we have seen three ways to create a Pod:
 - with `kubectl apply`
 - with the `client-go` library.
 
-The Pod created is ready for production ... it you are not very fussy. Otherwise, the Pod offers a long list of parameters to make it more production-ready. We will examine in this document all these parameters.
+The Pod created is ready for production ... if you are not very fussy. Otherwise, the Pod offers a long list of parameters to make it more production-ready. We will examine in this document all these parameters.
 
 ## Pod specs
 
@@ -158,12 +158,12 @@ Here is a classification of the Pod parameters.
 
 - **Volumes** parameter (`Volumes`) will define a list of volumes that containers will be able to mount and share.
 
-- **Scheduling** parameters will help you define the most appropriate Node to deploy the Pod, by selecting nodes labels (`NodeSelector`), directly specifying a node name (`NodeName`),  
+- **Scheduling** parameters will help you define the most appropriate Node to deploy the Pod, by selecting nodes by labels (`NodeSelector`), directly specifying a node name (`NodeName`),  
 using `Affinity` and `Tolerations`, by selecting a specific scheduler (`ScedulerName`), and by requiring a specific runtime class (`RuntimeClassName`). They will also be used to prioritize a Pod over other Pods (`PriorityClassName`and `Priority`).
 
-- **Lifecycle** parameters will help define if a Pod should restart after execution ends (`RestartPolicy`) and fine-tune the periods after which processes running in the containers of a terminating pod are killed (`TerminationGracePeriodSeconds`) or after which a running Pod will be stopped if not yet terminated (`ActiveDeadlineSeconds`). They also help define readiness of a pod (`ReadinessGates`).
+- **Lifecycle** parameters will help define if a Pod should restart after termination (`RestartPolicy`) and fine-tune the periods after which processes running in the containers of a terminating pod are killed (`TerminationGracePeriodSeconds`) or after which a running Pod will be stopped if not yet terminated (`ActiveDeadlineSeconds`). They also help define readiness of a pod (`ReadinessGates`).
 
-- **Hostname and Name resolution** parameters will help define the hostname (`Hostname`) and FQDN (`Subdomain`) of the Pod, add hosts in the */etc/hosts* files of the containers (`HostAliases`), fine-tune the */etc/resolv.conf* files of the containers (`DNSConfig`) and define a policy for the DNS configuration (`DNSPolicy`).
+- **Hostname and Name resolution** parameters will help define the hostname (`Hostname`) and part of the FQDN (`Subdomain`) of the Pod, add hosts in the */etc/hosts* files of the containers (`HostAliases`), fine-tune the */etc/resolv.conf* files of the containers (`DNSConfig`) and define a policy for the DNS configuration (`DNSPolicy`).
 
 - **Host namespaces** parameters will help indicate if the Pod must use host namespaces for network (`HostNetwork`), PIDs (`HostPID`), IPC (`HostIPC`) and if containers will share the same (non-host) process namespace (`ShareProcessNamespace`).
 
@@ -181,7 +181,7 @@ The parameters related to container runtime are:
 
 - **Image** parameters define the image of the container (`Image`) and the policy to pull the image (`ImagePullPolicy`).
 
-- **Entrypoint** parameters define the command (`Command`) and its arguments (`Args`) of the entrypoint and its working directory (`WorkingDir`).
+- **Entrypoint** parameters define the command (`Command`) and arguments (`Args`) of the entrypoint and its working directory (`WorkingDir`).
 
 - **Ports** parameter (`Ports`) defines the list of ports to expose from the container.
 
