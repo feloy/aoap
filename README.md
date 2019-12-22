@@ -1,5 +1,75 @@
 # Anatomy of a Pod
 
+## A little bit of history
+
+### The 80's with `chroot`
+
+During the 80's, the `chroot` Unix system call is created, to give a process and its children a root filesystem different from the system root filesystem. This way, the processes are not able to access, by their name, files outside of this new root filesystem (but, and that's another story, there exist some indirect ways to access files outside of this new root filesystem).
+
+This isolation is specifically useful for two use cases:
+
+- you want to test a new system, based on a fresh new filesystem, without the need to reboot your computer and kernel,
+- you want to run a service on a system with the guarantee that the service will have access to a part of the filesystem only.
+
+To experiment, we will create a very small system, based on the `busybox` tool.
+
+- be sure the `busybox` is installed on your system, for example on a Debian-based system:
+```
+$ sudo apt install busybox-static
+```
+
+- create a new directory and create the necessary files to be able to run some commands:
+```
+$ mkdir newroot
+$ cd newroot
+$ mkdir bin proc
+$ cd bin
+$ cp $(which busybox) .
+$ ln -s busybox sh
+$ ln -s busybox ls
+$ ln -s busybox ps
+$ cd ..
+# mouting the proc virtual filesystem is required
+# to run the ps command
+$ sudo mount -t proc proc ./proc/
+$ sudo chroot . sh
+```
+
+- we are now in a shell for which the root filesystem is `newroot`:
+
+```
+# ls /
+bin   proc
+# ls /bin
+busybox  ls       ps       sh
+```
+
+
+Note that we still have access to all the processes of the system:
+
+```
+# ps
+[...]
+```
+
+- If you open a new terminal and run a command:
+```
+$ sleep 10000
+```
+
+- then go back to your chroot environment and try to stop this process:
+```
+# ps | grep sleep
+ 9550 1001     sleep 10000
+# kill 9550
+ ```
+
+- the process started outside of the chroot environment will stop:
+```
+$ sleep 10000
+Completed
+```
+
 ## Introduction
 
 The Pod is the master piece of the Kubernetes cluster architecture.
